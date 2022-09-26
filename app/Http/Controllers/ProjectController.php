@@ -49,7 +49,7 @@ class ProjectController extends Controller
             'accountId' => 'required|integer'
         ]);
         $projectList = $this->projects->add($request->projectName, $request->accountId);
-        return 'OK';
+        return 'Add OK';
     }
 
     /**
@@ -69,10 +69,10 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $Project
      * @return \Illuminate\Http\Response
      */
-    public function edit(Project $Project)
-    {
-        //
-    }
+    // public function edit(Request $request)
+    // {
+        
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -81,9 +81,15 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $Project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $Project)
+    public function edit(Request $request)
     {
-        //
+        $request->validate([
+            'projectName' => 'required|min:5',
+            'accountId' => 'required|integer',
+            'id' => 'required|integer',
+        ]);
+        $projectList = $this->projects->update($request->projectName, $request->accountId, $request->id);
+        return 'Update OK';
     }
 
     /**

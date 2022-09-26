@@ -26,5 +26,6 @@ Route::get('/test-string', function () {
 Route::controller(ProjectController::class)->prefix('project')->group(function () {
     Route::get('/getAll', 'index');
     Route::post('/add', 'store');
+    Route::post('/edit', 'edit');
 });
 
