@@ -22,4 +22,9 @@ class Project extends Model
     {
         return DB::update('UPDATE projects SET project_name = ?, account_id= ? WHERE id = ?',[$projectName, $accountId, $projectId]);
     }
+
+    public function deleteById($projectId)
+    {
+        return DB::delete('DELETE FROM projects WHERE id = ?',[$projectId]);
+    }
 }

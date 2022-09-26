@@ -88,7 +88,7 @@ class ProjectController extends Controller
             'accountId' => 'required|integer',
             'id' => 'required|integer',
         ]);
-        $projectList = $this->projects->edit($request->projectName, $request->accountId, $request->id);
+        $projectList = $this->projects->update($request->projectName, $request->accountId, $request->id);
         return 'Update OK';
     }
 
@@ -101,5 +101,11 @@ class ProjectController extends Controller
     public function destroy(Project $Project)
     {
         //
+    }
+
+    public function deleteById($id)
+    {
+        $projectList = $this->projects->deleteById($id);
+        return 'Delete OK';
     }
 }
