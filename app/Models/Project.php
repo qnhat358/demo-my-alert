@@ -10,7 +10,7 @@ class Project extends Model
 {
     use HasFactory;
     public function getAll(){
-        return DB::select('SELECT projects.id, projects.project_name, accounts.account_name, accounts.id  FROM projects INNER JOIN accounts ON projects.account_id = accounts.id ORDER BY projects.id');
+        return DB::select('SELECT projects.id AS Project_id, projects.project_name, accounts.account_name, accounts.id AS Account_id  FROM projects INNER JOIN accounts ON projects.account_id = accounts.id ORDER BY projects.id');
     }
 
     public function add($projectName, $accountId){
