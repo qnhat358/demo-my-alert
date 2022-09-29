@@ -46,7 +46,7 @@ class ProjectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $request->validate([
             'projectName' => 'required|min:5',
             'accountId' => 'required|integer'
@@ -56,13 +56,22 @@ class ProjectController extends Controller
             $account = Account::findOrFail($request->accountId);
             // return($account);
         } catch (Exception $e) {
-            return response()->json(['message'=>'Account not found'], 404);
+            return response()->json([
+                'message' => 'Account not found',
+                'status' => 'Failed',
+            ], 404);
             //throw $th;
         }
         $projectList = $this->projects->add($request->projectName, $request->accountId);
-        if ($projectList){
-            $response = response()->json(['message'=>'Add project successful'], 201);
-        } else $response = response()->json(['message'=>'Add project failed'], 404);
+        if ($projectList) {
+            $response = response()->json([
+                'message' => 'Add project successful',
+                'status' => 'Success',
+            ], 201);
+        } else $response = response()->json([
+            'message' => 'Add project failed',
+            'status' => 'Failed',
+        ], 404);
         return $response;
     }
 
@@ -85,7 +94,7 @@ class ProjectController extends Controller
      */
     // public function edit(Request $request)
     // {
-        
+
     // }
 
     /**
@@ -106,14 +115,22 @@ class ProjectController extends Controller
             $account = Account::findOrFail($request->accountId);
             // return($account);
         } catch (Exception $e) {
-            return response()->json(['message'=>'Account not found'], 404);
+            return response()->json([
+                'message' => 'Account not found',
+                'status' => 'Failed',
+            ], 404);
             //throw $th;
         }
         $projectList = $this->projects->edit($request->projectName, $request->accountId, $id);
-        if ($projectList){
-            $response = response()->json(['message'=>'Edit successful'], 200);
-        }
-        else $response = response()->json(['message'=>'Edit failed'], 404);
+        if ($projectList) {
+            $response = response()->json([
+                'message' => 'Edit successful',
+                'status' => 'Success',
+            ], 200);
+        } else $response = response()->json([
+            'message' => 'Edit failed',
+            'status' => 'Failed',
+        ], 404);
         return $response;
     }
 
@@ -131,6 +148,15 @@ class ProjectController extends Controller
     public function deleteById($id)
     {
         $projectList = $this->projects->deleteById($id);
-        return 'Delete OK';
+        if ($projectList) {
+            $response = response()->json([
+                'message' => 'Delete successful',
+                'status' => 'Success',
+            ], 200);
+        } else $response = response()->json([
+            'message' => 'Delete failed',
+            'status' => 'Failed',
+        ], 404);
+        return $response;
     }
 }
