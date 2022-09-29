@@ -26,7 +26,7 @@ Route::get('/test-string', function () {
 Route::controller(ProjectController::class)->prefix('project')->group(function () {
     Route::get('/getAll', 'index');
     Route::post('/add', 'store');
-    Route::post('/edit', 'edit');
-    Route::delete('/delete/{id}', 'deleteById');
+    Route::post('/edit/{id}', 'edit')->where('id',  '[0-9]+'); 
+    Route::delete('/delete/{id}', 'deleteById')->where('id',  '[0-9]+');
 });
 

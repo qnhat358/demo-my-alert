@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Account;
+use Exception;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\TryCatch;
 
 class ProjectController extends Controller
 {
@@ -48,8 +51,19 @@ class ProjectController extends Controller
             'projectName' => 'required|min:5',
             'accountId' => 'required|integer'
         ]);
+        try {
+            //code...
+            $account = Account::findOrFail($request->accountId);
+            // return($account);
+        } catch (Exception $e) {
+            return response()->json(['message'=>'Account not found'], 404);
+            //throw $th;
+        }
         $projectList = $this->projects->add($request->projectName, $request->accountId);
-        return 'Add OK';
+        if ($projectList){
+            $response = response()->json(['message'=>'Add project successful'], 201);
+        } else $response = response()->json(['message'=>'Add project failed'], 404);
+        return $response;
     }
 
     /**
@@ -81,15 +95,26 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $Project
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit(Request $request, $id)
     {
         $request->validate([
             'projectName' => 'required|min:5',
             'accountId' => 'required|integer',
-            'id' => 'required|integer',
         ]);
-        $projectList = $this->projects->edit($request->projectName, $request->accountId, $request->id);
-        return 'Update OK';
+        try {
+            //code...
+            $account = Account::findOrFail($request->accountId);
+            // return($account);
+        } catch (Exception $e) {
+            return response()->json(['message'=>'Account not found'], 404);
+            //throw $th;
+        }
+        $projectList = $this->projects->edit($request->projectName, $request->accountId, $id);
+        if ($projectList){
+            $response = response()->json(['message'=>'Edit successful'], 200);
+        }
+        else $response = response()->json(['message'=>'Edit failed'], 404);
+        return $response;
     }
 
     /**
