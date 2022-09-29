@@ -56,7 +56,7 @@ class ProjectController extends Controller
             ]);
         } catch (ValidationException $e) {
             return response()->json([
-                'message'    => 'Error',
+                'message'    => 'Validate failed',
                 'status' => 'Failed',
                 'errors' => $e->errors(),
             ], 404);
@@ -124,7 +124,7 @@ class ProjectController extends Controller
             ]);
         } catch (ValidationException $e) {
             return response()->json([
-                'message'    => 'Error',
+                'message'    => 'Validate failed',
                 'status' => 'Failed',
                 'errors' => $e->errors(),
             ], 404);
