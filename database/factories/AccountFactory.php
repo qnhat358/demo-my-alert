@@ -19,7 +19,6 @@ class AccountFactory extends Factory
         return [
             'account_name' => $this->faker->userName(),
             'email' => $this->faker->email(),
-            'account_name' => $this->faker->userName(),
         ];
     }
 }
