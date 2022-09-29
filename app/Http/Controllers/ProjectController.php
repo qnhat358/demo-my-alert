@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Account;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use PhpParser\Node\Stmt\TryCatch;
 
 class ProjectController extends Controller
@@ -47,10 +48,19 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'projectName' => 'required|min:5',
-            'accountId' => 'required|integer'
-        ]);
+        try {
+            //code...
+            $request->validate([
+                'projectName' => 'required|min:5',
+                'accountId' => 'required|integer',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message'    => 'Error',
+                'status' => 'Failed',
+                'errors' => $e->errors(),
+            ], 404);
+        }
         try {
             //code...
             $account = Account::findOrFail($request->accountId);
@@ -106,10 +116,19 @@ class ProjectController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $request->validate([
-            'projectName' => 'required|min:5',
-            'accountId' => 'required|integer',
-        ]);
+        try {
+            //code...
+            $request->validate([
+                'projectName' => 'required|min:5',
+                'accountId' => 'required|integer',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message'    => 'Error',
+                'status' => 'Failed',
+                'errors' => $e->errors(),
+            ], 404);
+        }
         try {
             //code...
             $account = Account::findOrFail($request->accountId);
