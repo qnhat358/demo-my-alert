@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Token;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -67,25 +70,42 @@ class AuthController extends Controller
                 'errors' => $e->errors(),
             ], 404);
         }
-
-        // $credentials = [
-        //     'email' => $request->email, 
-        //     'password' => Hash::make($request->password)
-        // ];
-
         $user = $this->users->getUser($request->email);
-        // var_dump($user);
-        // die();
         if (!Hash::check($request->password, $user->password)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
-        return auth()->login($user);   
+        $token = auth()->login($user);
+        $token = auth()->customClaims(['exp' => Carbon::now()->addSeconds(45)->timestamp])->fromUser($user);
+        // dd((auth()->payload())['exp']);
+        // dd(Carbon::now()->timestamp);
+        // $data = JWTAuth::decode(new Token($token))->toArray();
+        return response()->json([
+            'status' => 'Success',
+            'user' => $user,
+            'authorisation' => [
+                'token' => $token,
+                'type' => 'bearer',
+                // 'expires_in' => $data['exp']
+            ]
+        ],200);
     }
 
     public function logout(){
-        auth()->logout();
-        return response()->json(['message' => 'User successfully signed out']);
+        try {
+            //code...
+            auth()->logout();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Successfully logged out',
+            ],200);
+        } catch (JWTException $e) {
+            //throw $th;
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Log out failed',
+                'errors' => $e->getMessage(),
+            ],200);
+        }
     }
 
     /**
@@ -94,8 +114,15 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function refresh()
-    {
-        return $this->respondWithToken(JWTAuth::refresh());
+    {   
+        return response()->json([
+            'status' => 'Success',
+            'user' => Auth::user(),
+            'authorisation' => [
+                'token' => Auth::refresh(),
+                'type' => 'bearer',
+            ]
+        ]);
     }
 
     /**

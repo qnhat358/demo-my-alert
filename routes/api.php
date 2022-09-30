@@ -31,8 +31,9 @@ Route::controller(ProjectController::class)->prefix('project')->group(function (
     Route::delete('/delete/{id}', 'deleteById')->where('id',  '[0-9]+');
 });
 
-Route::controller(AuthController::class)->prefix('auth')->group(function () {
+Route::controller(AuthController::class)->middleware('jwt.auth')->prefix('auth')->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
     Route::post('/logout', 'logout');
+    Route::post('/refresh', 'refresh');
 });
