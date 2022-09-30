@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,8 @@ Route::controller(ProjectController::class)->prefix('project')->group(function (
     Route::delete('/delete/{id}', 'deleteById')->where('id',  '[0-9]+');
 });
 
+Route::controller(AuthController::class)->prefix('auth')->group(function () {
+    Route::post('/register', 'register');
+    Route::post('/login', 'login');
+    Route::post('/logout', 'logout');
+});
