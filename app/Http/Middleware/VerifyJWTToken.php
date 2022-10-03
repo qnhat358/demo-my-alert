@@ -18,6 +18,7 @@ class VerifyJWTToken
      */
     public function handle(Request $request, Closure $next)
     {   
+        // dd('aaaaaaa');
         try {
             $user = JWTAuth::toUser($request->input('token'));
         }catch (JWTException $e) {

@@ -18,7 +18,7 @@ class AuthController extends Controller
     public function __construct(User $User)
     {
         //apply middleware to all route /api except /api/login
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['register', 'login']]);
         $this->users = $User;
     }
 
@@ -32,8 +32,8 @@ class AuthController extends Controller
             ]);
         } catch (ValidationException $e) {
             return response()->json([
-                'message'    => 'Validate failed',
-                'status' => 'Failed',
+                'message'    => 'validate failed',
+                'status' => 'failed',
                 'errors' => $e->errors(),
             ], 404);
         }
@@ -46,12 +46,12 @@ class AuthController extends Controller
 
         if ($userList) {
             $response = response()->json([
-                'message' => 'Register user successful',
-                'status' => 'Success',
+                'message' => 'register user successful',
+                'status' => 'success',
             ], 201);
         } else $response = response()->json([
-            'message' => 'Register user failed',
-            'status' => 'Failed',
+            'message' => 'register user failed',
+            'status' => 'failed',
         ], 404);
         return $response;
     }
@@ -99,7 +99,6 @@ class AuthController extends Controller
                 'message' => 'Successfully logged out',
             ],200);
         } catch (JWTException $e) {
-            //throw $th;
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Log out failed',
@@ -132,12 +131,12 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function createNewToken($token){
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
-        ]);
-    }
+    // protected function createNewToken($token){
+    //     return response()->json([
+    //         'access_token' => $token,
+    //         'token_type' => 'bearer',
+    //         'expires_in' => auth()->factory()->getTTL() * 60,
+    //         'user' => auth()->user()
+    //     ]);
+    // }
 }
