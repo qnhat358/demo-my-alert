@@ -14,8 +14,7 @@ class Project extends Model
     }
 
     public function add($projectName, $accountId){
-        return DB::select('INSERT into projects (project_name, account_id, created_at) values (?, ?, ?)', [$projectName, $accountId, date ('Y-m-d H:i:s')
-    ]);
+        return DB::insert('INSERT into projects (project_name, account_id, created_at) values (?, ?, ?)', [$projectName, $accountId, date ('Y-m-d H:i:s')]);
     }
 
     public function edit($projectName, $accountId, $projectId)

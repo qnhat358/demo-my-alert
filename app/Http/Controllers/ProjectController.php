@@ -2,26 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
 use App\Models\Account;
+use App\Http\Requests\ProjectRequest;
+use App\Services\Project\ProjectServiceInterface;
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
-use PhpParser\Node\Stmt\TryCatch;
 
 class ProjectController extends Controller
 {
-    protected $projects;
+    protected $projectService;
 
-    public function __construct(Project $Project)
+    public function __construct(ProjectServiceInterface $ProjectService)
     {
-        $this->projects = $Project;
+        $this->projectService = $ProjectService;
     }
 
     public function index()
     {
-        $projectList = $this->projects->getAll();
-        return $projectList;
+        return $this->projectService->getAll();
     }
 
     /**
@@ -30,43 +27,9 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProjectRequest $request)
     {
-        try {
-            //code...
-            $request->validate([
-                'projectName' => 'required|min:5',
-                'accountId' => 'required|integer',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'message'    => 'Validate failed',
-                'status' => 'Failed',
-                'errors' => $e->errors(),
-            ], 404);
-        }
-        try {
-            //code...
-            $account = Account::findOrFail($request->accountId);
-            // return($account);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Account not found',
-                'status' => 'Failed',
-            ], 404);
-            //throw $th;
-        }
-        $projectList = $this->projects->add($request->projectName, $request->accountId);
-        if ($projectList) {
-            $response = response()->json([
-                'message' => 'Add project successful',
-                'status' => 'Success',
-            ], 201);
-        } else $response = response()->json([
-            'message' => 'Add project failed',
-            'status' => 'Failed',
-        ], 404);
-        return $response;
+        return $this->projectService->create($request);
     }
 
     /**
@@ -76,57 +39,13 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $Project
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit(ProjectRequest $request, $id)
     {
-        try {
-            //code...
-            $request->validate([
-                'projectName' => 'required|min:5',
-                'accountId' => 'required|integer',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'message'    => 'Validate failed',
-                'status' => 'Failed',
-                'errors' => $e->errors(),
-            ], 404);
-        }
-        try {
-            //code...
-            $account = Account::findOrFail($request->accountId);
-            // return($account);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Account not found',
-                'status' => 'Failed',
-            ], 404);
-            //throw $th;
-        }
-        $projectList = $this->projects->edit($request->projectName, $request->accountId, $id);
-        if ($projectList) {
-            $response = response()->json([
-                'message' => 'Edit successful',
-                'status' => 'Success',
-            ], 200);
-        } else $response = response()->json([
-            'message' => 'Edit failed',
-            'status' => 'Failed',
-        ], 404);
-        return $response;
+        return $this->projectService->update($request, $id);
     }
 
     public function deleteById($id)
     {
-        $projectList = $this->projects->deleteById($id);
-        if ($projectList) {
-            $response = response()->json([
-                'message' => 'Delete successful',
-                'status' => 'Success',
-            ], 200);
-        } else $response = response()->json([
-            'message' => 'Delete failed',
-            'status' => 'Failed',
-        ], 404);
-        return $response;
+        return $this->projectService->delete($id);
     }
 }
