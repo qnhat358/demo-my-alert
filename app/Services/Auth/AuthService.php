@@ -44,7 +44,10 @@ class AuthService implements AuthServiceInterface
     {
         $user = $this->users->getUser($request->email);
         if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json([
+                'message' => 'Unauthorized',
+                'status' => 'error'
+        ], 401);
         }
         $token = auth()->login($user);
         $token = auth()->customClaims(['exp' => Carbon::now()->addSeconds(45)->timestamp])->fromUser($user);
