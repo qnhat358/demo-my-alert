@@ -27,16 +27,16 @@ class ProjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'projectName' => ['required', 'min:5'],
-            'accountId' => [
+            'project_name' => ['required', 'min:5'],
+            'account_id' => [
                 'required',
                 'integer',
                 Rule::unique("projects", "account_id")->where(
                     function ($query) {
                         return $query->where(
                             [
-                                ["project_name", "=", $this->projectName],
-                                ["account_id", "=", $this->accountId]
+                                ["project_name", "=", $this->project_name],
+                                ["account_id", "=", $this->account_id]
                             ]
                         );
                     }
@@ -48,7 +48,7 @@ class ProjectRequest extends FormRequest
     public function messages()
     {
         return [
-            'accountId.unique' => 'Duplicated data',
+            'account_id.unique' => 'Duplicated data',
         ];
     }
 
