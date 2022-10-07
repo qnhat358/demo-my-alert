@@ -55,7 +55,7 @@ class ProjectService implements ProjectServiceInterface
     {
         // dd('aaaaa');
         try {
-            $account = Account::findOrFail($request->accountId);
+            $account = Account::findOrFail($request->account_id);
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Account not found',
@@ -63,7 +63,7 @@ class ProjectService implements ProjectServiceInterface
             ], 404);
         }
         // dd($request->collect());
-        $projectList = $this->projects->add($request->projectName, $request->accountId);
+        $projectList = $this->projects->add($request->project_name, $request->account_id);
         if ($projectList) {
             $response = response()->json([
                 'message' => 'Add project successful',
@@ -80,7 +80,7 @@ class ProjectService implements ProjectServiceInterface
     public function update($request, $id)
     {
         try {
-            $account = Account::findOrFail($request->accountId);
+            $account = Account::findOrFail($request->account_id);
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Account not found',
@@ -97,15 +97,15 @@ class ProjectService implements ProjectServiceInterface
             ], 404);
         }
 
-        $projectList = $this->projects->edit($request->projectName, $request->accountId, $id);
+        $projectList = $this->projects->edit($request->project_name, $request->account_id, $id);
         if ($projectList) {
             $response = response()->json([
                 'message' => 'Edit successful',
                 'status' => 'success',
                 'project' => [
-                    'projectName' => $request->projectName,
-                    'accountId' => $request->accountId,
-                    'projectId' => $id,
+                    'project_name' => $request->project_name,
+                    'account_id' => $request->account_id,
+                    'project_id' => $id,
                 ]
             ], 200);
         } else $response = response()->json([
