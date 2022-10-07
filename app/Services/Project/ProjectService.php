@@ -27,6 +27,30 @@ class ProjectService implements ProjectServiceInterface
         ], 200);
     }
 
+    public function get($id)
+    {
+        try {
+            $project = Project::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Project not found',
+                'status' => 'error',
+            ], 404);
+        }
+        $projectList = $this->projects->getById($id);
+        if ($projectList) {
+            $response = response()->json([
+                'message' => 'Get project successful',
+                'status' => 'success',
+                'project' => $projectList,
+            ], 200);
+        } else $response = response()->json([
+            'message' => 'Get project failed',
+            'status' => 'error',
+        ], 404);
+        return $response;
+    }
+
     public function create($request)
     {
         // dd('aaaaa');

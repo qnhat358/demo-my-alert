@@ -21,6 +21,11 @@ class ProjectController extends Controller
         return $this->projectService->getAll();
     }
 
+    public function getById($id)
+    {
+        return $this->projectService->get($id);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
