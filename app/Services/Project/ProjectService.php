@@ -42,7 +42,7 @@ class ProjectService implements ProjectServiceInterface
             $response = response()->json([
                 'message' => 'Get project successful',
                 'status' => 'success',
-                'project' => $projectList,
+                'project' => $projectList[0],
             ], 200);
         } else $response = response()->json([
             'message' => 'Get project failed',
