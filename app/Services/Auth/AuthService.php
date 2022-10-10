@@ -11,6 +11,9 @@ use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use PHPOpenSourceSaver\JWTAuth\Token;
 
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
+
 class AuthService implements AuthServiceInterface
 {
     private $users;
@@ -43,22 +46,33 @@ class AuthService implements AuthServiceInterface
     public function login($request)
     {
         $user = $this->users->getUser($request->email);
-        if (!Hash::check($request->password, $user->password)) {
+        if (is_null($user)){
+            // dd($user);
+            // var_dump($user);
+            // die();
             return response()->json([
-                'message' => 'Unauthorized',
-                'status' => 'error'
-        ], 401);
+                'message' => 'Account not found',
+                'status' => 'error',
+            ], 404);
         }
-        $token = auth()->login($user);
-        $token = auth()->customClaims(['exp' => Carbon::now()->addSeconds(45)->timestamp])->fromUser($user);
-        return response()->json([
-            'status' => 'success',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ], 200);
+        else {
+            if (!Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'message' => 'Unauthorized',
+                    'status' => 'error'
+            ], 401);
+            }
+            $token = auth()->login($user);
+            $token = auth()->customClaims(['exp' => Carbon::now()->addSeconds(45)->timestamp])->fromUser($user);
+            return response()->json([
+                'status' => 'success',
+                'user' => $user,
+                'authorisation' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ]
+            ], 200);
+        }
     }
 
     public function logout()
