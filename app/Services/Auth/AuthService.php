@@ -63,7 +63,7 @@ class AuthService implements AuthServiceInterface
             ], 401);
             }
             $token = auth()->login($user);
-            $token = auth()->customClaims(['exp' => Carbon::now()->addSeconds(45)->timestamp])->fromUser($user);
+            $token = auth()->customClaims(['exp' => Carbon::now()->addMinutes(30)->timestamp])->fromUser($user);
             return response()->json([
                 'status' => 'success',
                 'user' => $user,

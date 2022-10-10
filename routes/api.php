@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\VerifyJWTToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,7 @@ Route::get('/test-string', function () {
     return 'testttttt';
 });
 
-Route::controller(ProjectController::class)->prefix('project')->group(function () {
+Route::controller(ProjectController::class)->prefix('project')->middleware('auth:api')->group(function () {
     Route::get('/getAll', 'index');
     Route::get('/get/{id}', 'getById')->where('id',  '[0-9]+'); 
     Route::post('/add', 'store');
