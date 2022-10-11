@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Termwind\Components\Raw;
 
 class Project extends Model
 {
     use HasFactory;
     public function getAll(){
-        return DB::select('SELECT projects.id AS project_id, projects.project_name, accounts.account_name, accounts.id AS account_id  FROM projects INNER JOIN accounts ON projects.account_id = accounts.id ORDER BY projects.id');
+        // return DB::select('SELECT projects.id AS project_id, projects.project_name, accounts.account_name, accounts.id AS account_id  FROM projects INNER JOIN accounts ON projects.account_id = accounts.id ORDER BY projects.id');
+        return DB::table('projects')->join('accounts','projects.account_id', '=', 'accounts.id')->orderBy('projects.id')->select('projects.id as project_id', 'projects.project_name', 'accounts.account_name', 'accounts.id as account_id')->paginate(10);
     }
 
     public function getById($projectId){

@@ -19,7 +19,7 @@ class ProjectService implements ProjectServiceInterface
     public function getAll()
     {
         $projectList = $this->projects->getAll();
-
+        
         return response()->json([
             'message' => 'Get all successful',
             'status' => 'success',
